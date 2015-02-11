@@ -2,22 +2,29 @@ package nl.lang2619.bagginses.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import nl.lang2619.bagginses.references.Defaults;
 
 /**
  * Created by Tim on 8/24/2014.
  */
-public class InventoryItemMain implements IInventory {
+public class ItemInventory implements IInventory {
 
     public ItemStack[] inventoryContents;
     public NBTTagCompound tag;
     public String name;
     public ItemStack item;
     public int stackSize;
+    public final Class<? extends Item> itemClass;
+    public final boolean isItemInventory;
+    public ItemStack parent;
+    protected ItemStack[] inventoryStacks;
+    public int size;
 
-    public InventoryItemMain(ItemStack item, int size, int stacksize) {
+    public ItemInventory(ItemStack item, int size, int stacksize) {
         inventoryContents = new ItemStack[size];
         name = item.getUnlocalizedName();
         if (!item.hasTagCompound()) {
@@ -26,6 +33,34 @@ public class InventoryItemMain implements IInventory {
         tag = item.getTagCompound();
         this.item = item;
         stackSize = stacksize;
+        itemClass = null;
+        isItemInventory = false;
+        this.size = size;
+    }
+
+    public ItemInventory(Class<? extends Item> itemClass, int size, ItemStack itemstack) {
+        this.itemClass = itemClass;
+
+        inventoryStacks = new ItemStack[size];
+
+        parent = itemstack;
+        isItemInventory = true;
+        this.size = size;
+
+        // Set an uid to identify the itemstack on SMP
+        setUID(false);
+
+        readFromNBT(itemstack.getTagCompound());
+    }
+
+    protected void setUID(boolean override) {
+        if (parent.getTagCompound() == null)
+            parent.setTagCompound(new NBTTagCompound());
+
+        NBTTagCompound nbt = parent.getTagCompound();
+        if (override || !nbt.hasKey("UID")) {
+            nbt.setInteger("UID", Defaults.getUID());
+        }
     }
 
     @Override
@@ -71,7 +106,7 @@ public class InventoryItemMain implements IInventory {
 
     @Override
     public int getSizeInventory() {
-        return inventoryContents.length;
+        return size;
     }
 
     @Override
@@ -145,5 +180,13 @@ public class InventoryItemMain implements IInventory {
             }
         }
         NBTTagCompound.setTag("Items", inventory);
+    }
+
+    public void save() {
+        NBTTagCompound nbt = parent.getTagCompound();
+        if (nbt == null)
+            nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        parent.setTagCompound(nbt);
     }
 }

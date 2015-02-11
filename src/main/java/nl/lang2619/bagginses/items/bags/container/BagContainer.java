@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import nl.lang2619.bagginses.inventory.InventoryItemMain;
+import nl.lang2619.bagginses.inventory.ItemInventory;
 import nl.lang2619.bagginses.inventory.InventoryItemVoid;
 import nl.lang2619.bagginses.items.bags.BagTier1;
 import nl.lang2619.bagginses.items.bags.BagTier2;
@@ -35,14 +35,14 @@ public class BagContainer extends Container {
             startX = 44;
             startY = 19;
             color = ((BagTier1) itemStack.getItem()).getColor();
-            bag = new InventoryItemMain(itemStack, 15, 64);
+            bag = new ItemInventory(itemStack, 15, 64);
         } else if (itemStack.getItem() instanceof BagTier2) {
             lines = 3;
             columns = 9;
             startX = 8;
             startY = 19;
             color = ((BagTier2) itemStack.getItem()).getColor();
-            bag = new InventoryItemMain(itemStack, 27, 64);
+            bag = new ItemInventory(itemStack, 27, 64);
         } else if (itemStack.getItem() instanceof BagVoid) {
             lines = 1;
             columns = 1;
@@ -103,7 +103,7 @@ public class BagContainer extends Container {
         if (foid) {
             ((InventoryItemVoid) bag).setNBT(player.getCurrentEquippedItem());
         } else {
-            ((InventoryItemMain) bag).setNBT(player.getCurrentEquippedItem());
+            ((ItemInventory) bag).setNBT(player.getCurrentEquippedItem());
         }
     }
 

@@ -14,7 +14,7 @@ public class ModConfig {
     public static void init(File file){
         Configuration config = new Configuration(file);
         config.load();
-        config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Input here all your whitelists per bag. \nIf empty, bag won't be added to the world.\nUse modid:* to whitelist the whole mod.\nFor example:\nminecraft:wool/2 will add Magenta wool to the whitelist. \nminecraft:wool will add every wool type. \nminecraft:wool/0+1+2 will add damage value 0,1 and 2.\nAdd multiple items by using a comma between items.");
+        config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Input here all your whitelists per bag. \nIf empty, bag won't be added to the world.\nUse modid:* to whitelist the whole mod.\nUse *:* to whitelist every mod + minecraft items/blocks to the whitelist.\nFor example:\nminecraft:wool/2 will add Magenta wool to the whitelist. \nminecraft:wool will add every wool type. \nminecraft:wool/0+1+2 will add damage value 0,1 and 2.\nAdd multiple items by using a comma between items.\n\nUse ore:oredictionaryname to add a complete oreDictionary list to the whitelist.\nFor example:\nore:dye will add all 16 dyes\nore:logWood will add all 6 types of planks (vanilla)");
         black = config.get(Configuration.CATEGORY_GENERAL,"Whitelist Items/Blocks for black bag","").getString();
         red = config.get(Configuration.CATEGORY_GENERAL,"Whitelist Items/Blocks for red bag","").getString();
         green = config.get(Configuration.CATEGORY_GENERAL,"Whitelist Items/Blocks for green bag","").getString();

@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import nl.lang2619.bagginses.Bagginses;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by Tim on 8/24/2014.
  */
-public class BagTier2 extends Item {
+public class BagTier2 extends Bag {
     String color;
 
     public BagTier2(String color) {
@@ -23,6 +22,7 @@ public class BagTier2 extends Item {
         maxStackSize = 1;
         setCreativeTab(Bagginses.BagTab);
         this.color = color;
+        size = 27;
     }
 
     public String getColor() {

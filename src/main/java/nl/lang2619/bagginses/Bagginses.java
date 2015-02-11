@@ -1,5 +1,6 @@
 package nl.lang2619.bagginses;
 
+import com.google.common.collect.Lists;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -15,9 +16,13 @@ import nl.lang2619.bagginses.items.ModItems;
 import nl.lang2619.bagginses.proxy.CommonProxy;
 import nl.lang2619.bagginses.references.BlockList;
 import nl.lang2619.bagginses.references.Defaults;
-import nl.lang2619.bagginses.references.Log;
+import nl.lang2619.bagginses.references.events.EventHandlers;
+import nl.lang2619.bagginses.references.events.PickupHandlerStorage;
+import nl.lang2619.bagginses.references.interfaces.IPickupHandler;
+import nl.lang2619.bagginses.references.interfaces.PickupHandlerCore;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Tim on 7/29/2014.
@@ -38,13 +43,27 @@ public class Bagginses {
 
     public static Configuration configuration;
 
+    public static final ArrayList<IPickupHandler> pickupHandlers = Lists.newArrayList();
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
         path = event.getModConfigurationDirectory().getAbsolutePath() + File.separator + Defaults.MODID.toLowerCase() + File.separator;
         ConfigHandler.init(path);
 
+        MinecraftForge.EVENT_BUS.register(new EventHandlers());
+
+        Bagginses pickup = instance;
+        loadPickup(pickup);
+
         ModItems.init();
+    }
+
+    private static void loadPickup(Bagginses pickup) {
+        IPickupHandler pickupHandler = pickup.getPickupHandler();
+        if (pickupHandler != null) {
+            pickupHandlers.add(pickupHandler);
+        }
     }
 
     @Mod.EventHandler
@@ -56,21 +75,25 @@ public class Bagginses {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        BlockList.addFromString(ModConfig.black,"black");
-        BlockList.addFromString(ModConfig.red,"red");
-        BlockList.addFromString(ModConfig.brown,"brown");
-        BlockList.addFromString(ModConfig.blue,"blue");
-        BlockList.addFromString(ModConfig.cyan,"cyan");
-        BlockList.addFromString(ModConfig.gray,"gray");
-        BlockList.addFromString(ModConfig.green,"green");
-        BlockList.addFromString(ModConfig.lightBlue,"lightBlue");
-        BlockList.addFromString(ModConfig.lime,"lime");
-        BlockList.addFromString(ModConfig.magenta,"magenta");
-        BlockList.addFromString(ModConfig.orange,"orange");
-        BlockList.addFromString(ModConfig.pink,"pink");
-        BlockList.addFromString(ModConfig.purple,"purple");
-        BlockList.addFromString(ModConfig.silver,"silver");
-        BlockList.addFromString(ModConfig.white,"white");
-        BlockList.addFromString(ModConfig.yellow,"yellow");
+        BlockList.addFromString(ModConfig.black, "black");
+        BlockList.addFromString(ModConfig.red, "red");
+        BlockList.addFromString(ModConfig.brown, "brown");
+        BlockList.addFromString(ModConfig.blue, "blue");
+        BlockList.addFromString(ModConfig.cyan, "cyan");
+        BlockList.addFromString(ModConfig.gray, "gray");
+        BlockList.addFromString(ModConfig.green, "green");
+        BlockList.addFromString(ModConfig.lightBlue, "lightBlue");
+        BlockList.addFromString(ModConfig.lime, "lime");
+        BlockList.addFromString(ModConfig.magenta, "magenta");
+        BlockList.addFromString(ModConfig.orange, "orange");
+        BlockList.addFromString(ModConfig.pink, "pink");
+        BlockList.addFromString(ModConfig.purple, "purple");
+        BlockList.addFromString(ModConfig.silver, "silver");
+        BlockList.addFromString(ModConfig.white, "white");
+        BlockList.addFromString(ModConfig.yellow, "yellow");
+    }
+
+    public IPickupHandler getPickupHandler(){
+        return new PickupHandlerStorage();
     }
 }
